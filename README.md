@@ -1,4 +1,10 @@
-# BriefLock
+<p align="center">
+  <img src="assets/brieflock-logo.png" alt="BriefLock" width="110">
+</p>
+
+<h1 align="center">BriefLock</h1>
+
+<p align="center"><strong>Drop the request. Lock the scope. Quote the price.</strong></p>
 
 **Paste a messy client request → get a scoped, market-priced quote, the right pricing model, a computed price with a receipt, and a scope-creep-proof contract.**
 
