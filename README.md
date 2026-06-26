@@ -46,11 +46,18 @@ Every quote is auto-saved to a `quotes/` scope-lock, so weeks later when a clien
 
 Two ways: (a) run **SETUP** — tell the agent your rate, floor, the services you sell, and your terms, and it writes your own `reference/profile.json` (the file it reads every session after); or (b) copy `reference/profile.example.json` to `reference/profile.json` and edit it by hand. `reference/profile.md` documents every field. That is the whole retarget, no code changes. To serve a different field entirely, add rows to `reference/service-compendium.md`.
 
-## How it's built (the methodology)
+## How it's built — the ICM methodology
 
-- **Deterministic core.** The price, the band, and the pricing model are computed in code (`reference/price_calc.py`), not improvised. The logic is also written in plain English in `reference/pricing-formula.md` and `reference/pricing-model-rules.md`, so the judgment lives in the folder, legibly.
-- **Grounded, not guessed.** Every hours band cites a market source (`reference/service-compendium.md`). Thin inputs route to discovery questions instead of a fabricated number.
-- **The moat** is the encoded pricing logic — the signal taxonomy, the scoring, the trap rules — not the raw numbers. Log your own past jobs in the profile and the estimates ground in your real history too.
+BriefLock is an **ICM** build — **Interpretable Context Methodology** — and that's the real story, not the code. The ICM idea: you don't *build an agent*, you build a **workspace** — a folder of plain-English markdown navigated by a routing table — and the agent **emerges** when a model reads it and follows the routing. No framework, no orchestration, no deployment. The folder *is* the agent.
+
+So BriefLock is that folder:
+
+- **Routing is the keystone.** `rules.md` opens with a mode router that the model resolves from the folder's own state: no `profile.json` yet → **SETUP**; a request → **QUOTE**; a request too thin to price → **discovery questions**; a follow-up against a locked job → **MONITOR**. Nothing is hard-coded as "the agent" — the right behavior is *selected* by the table.
+- **Each file is one layer, doing one job.** `identity.md` = who it is · `rules.md` = the workflow + routing · `examples.md` = the worked cases that calibrate the judgment · `reference/` = the knowledge and tools, loaded only when a step needs them. Lean files on top, depth in reference; the model reads *down* and stops when it has enough.
+- **Legible and editable — no black box.** Every rule, every market band, every contract clause is plain markdown a freelancer can open, read, and change. If a quote looks off, you open the file and see exactly what the agent was told.
+- **Retarget by editing one file.** Fill in `profile.json` — your rate, services, terms — and the same folder becomes *your* pricing operator. A stranger fills it differently and it's theirs. That's ICM's "context is the program" in one move.
+
+**Where the methodology meets code (the small part).** A price must be the *same* every time, so the one spot a number is decided is a tiny Python tool (`reference/price_calc.py`) — and even its logic is written in plain English (`pricing-formula.md`, `pricing-model-rules.md`, sourced bands in `service-compendium.md`) so the judgment still lives in the folder, auditable. The model labels the request; the code computes the number. The engine is just one tool in the reference layer. **The moat is the encoded judgment in the workspace — the signal taxonomy, the scoring, the trap rules — not the script.**
 
 ## Files
 
