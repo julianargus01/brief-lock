@@ -1,0 +1,42 @@
+{
+  "_comment": "Expected output of: python price_calc.py sample-intake.json profile.example.json. Committed so the computation is legible without running it. Hand-check: 4 signal points -> HIGH band -> 120 h, +25% AI buffer -> 150 h, x $125 = $18,750 labor, +10% overhead = $20,625.",
+  "status": "QUOTED",
+  "studio": "Northlight AI",
+  "currency": "USD",
+  "line_items": [
+    {
+      "service_key": "ai-agent-single",
+      "tier": "TIER-2",
+      "source": "compendium HIGH band, 4 pts",
+      "points": 4,
+      "band": "HIGH",
+      "base_hours": 120,
+      "buffer_pct": 0.25,
+      "buffered_hours": 150.0,
+      "labor": 18750
+    }
+  ],
+  "subtotal": 18750,
+  "overhead_pct": 0.1,
+  "overhead": 1875,
+  "price": 20625,
+  "floor_applied": false,
+  "pricing_model": {
+    "model": "FLAT",
+    "reason": "fired on scope_bounded=true, estimable, not ongoing",
+    "trap_avoided": "avoids billing hourly on a clean bounded deliverable and capping your upside"
+  },
+  "value_based": null,
+  "rate_check": "Rate is market-sane: base effort $15000 sits inside $5000-$15000. The quote ($20625) adds the risk buffer and overhead on top of this base.",
+  "quote_vs_band": "above",
+  "market_band": [
+    5000,
+    15000
+  ],
+  "run_costs": [
+    {
+      "service_key": "ai-agent-single",
+      "monthly": "API usage"
+    }
+  ]
+}

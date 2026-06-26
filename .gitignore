@@ -1,0 +1,13 @@
+# A user's own saved profile, brand assets, and saved client quotes stay local.
+# The shipped demo is profile.example.json (committed); a real user's
+# profile.json, logo, and quotes/ scope-locks are private and never committed.
+reference/profile.json
+reference/brand/
+quotes/
+
+# If the shipped demo needs a committed logo, force-add it:
+#   git add -f reference/brand/logo.png
+
+# Python
+__pycache__/
+*.pyc

@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Proposal &amp; Service Agreement</title>
+<!--
+  BriefLock — branded, client-facing proposal + service agreement template.
+  Print-ready (US Letter). The engine/agent sets window.PROPOSAL_DATA to render a
+  quote; it merges over DEFAULT_DATA, so any omitted field falls back sensibly.
+  Pick the content per reference/proposal-assembly.md; clause text per reference/contract-templates.md.
+  CLIENT-FACING: shows a clean total framed as investment + value. It NEVER shows
+  internal pricing math (hours x rate, buffer %, overhead, points, band, tier) —
+  that lives only in the chat receipt the freelancer sees.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* DEFAULT theme (no-brand fallback). Brand block overrides --ink/--accent/--display via JS. */
+    --ink:#1f2937;        /* charcoal */
+    --accent:#2563eb;     /* blue     */
+    --on-accent:#ffffff;  /* text that sits ON the accent — recomputed for contrast in JS */
+    --accent-soft:color-mix(in srgb, var(--accent) 12%, #ffffff);
+    --muted:#5b6b7a;
+    --hair:#e3e8ec;
+    --paper:#ffffff;
+    --display:system-ui,-apple-system,'Segoe UI',sans-serif;  /* default; brand.font overrides */
+    --mono:'Space Mono',ui-monospace,monospace;               /* template figure style (constant) */
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:#eef1f4;color:var(--ink);font-family:var(--display);-webkit-font-smoothing:antialiased}
+  a{color:inherit}
+
+  /* screen-only toolbar */
+  .bar{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:14px;
+       background:var(--ink);color:#fff;padding:12px 20px;font-size:13px}
+  .bar .tag{font-family:var(--mono);font-size:11px;letter-spacing:.04em;opacity:.7}
+  .bar .spacer{flex:1}
+  .bar button{font-family:var(--display);font-weight:600;font-size:13px;border:0;cursor:pointer;
+       background:var(--accent);color:var(--on-accent);padding:9px 16px;border-radius:7px}
+  .bar button:hover{filter:brightness(1.06)}
+  .powered{font-family:var(--mono);font-size:11px;opacity:.6}
+
+  /* page */
+  .sheet{background:var(--paper);max-width:8.5in;margin:22px auto;padding:.7in .8in;
+         box-shadow:0 8px 40px rgba(19,41,61,.12);border-radius:2px}
+
+  /* cover (fills ~one printed page; break-after pushes the body to a fresh page) */
+  .cover{min-height:9in;display:flex;flex-direction:column;border-bottom:0}
+  .cover .top{display:flex;align-items:flex-start;gap:16px}
+  .cover .cover-title{margin-top:auto;padding-top:40px}
+  .cover .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent)}
+  .cover h1{font-size:42px;letter-spacing:-.02em;line-height:1.03;margin:14px 0 10px}
+  .cover .for{font-size:19px;color:var(--ink);font-weight:500}
+  .cover .meta{color:var(--muted);font-size:13px;margin-top:18px;line-height:1.7;font-family:var(--mono)}
+  .cover .toc{margin-top:auto;padding-top:34px;border-top:1px solid var(--hair);color:var(--muted);font-size:12px;line-height:1.7}
+  .cover .toc b{font-family:var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--accent);font-size:10.5px;display:block;margin-bottom:6px}
+
+  /* running header (per document part) */
+  .runhead{display:flex;justify-content:space-between;align-items:center;
+     font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;color:var(--muted);
+     padding-bottom:10px;margin-bottom:6px;border-bottom:1px solid var(--hair)}
+  .runhead .r{color:var(--accent);text-transform:uppercase}
+
+  /* header */
+  header.doc{display:flex;align-items:flex-start;gap:16px;border-bottom:2px solid var(--ink);padding-bottom:18px}
+  .mark{width:40px;height:40px;color:var(--accent);flex:0 0 auto;margin-top:2px}
+  .brandblock .name{font-weight:700;font-size:22px;letter-spacing:-.01em;line-height:1}
+  .brandblock .tagline{color:var(--muted);font-size:12.5px;margin-top:5px}
+  .header-right{margin-left:auto;text-align:right}
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent)}
+  .header-right .meta{color:var(--muted);font-size:12px;margin-top:6px;line-height:1.6}
+
+  h1.title{font-size:25px;letter-spacing:-.02em;margin:26px 0 4px}
+  .prepared{color:var(--muted);font-size:13px;margin-bottom:8px}
+
+  section.block{margin-top:22px;break-inside:avoid}
+  h2{font-size:12px;font-family:var(--mono);letter-spacing:.14em;text-transform:uppercase;
+     color:var(--accent);margin:0 0 10px;display:flex;align-items:center;gap:9px;break-after:avoid}
+  h2::before{content:"";width:14px;height:2px;background:var(--accent);display:inline-block}
+  p.body{font-size:14.5px;line-height:1.65;margin:0 0 10px;color:#23384a}
+  p.body:last-child{margin-bottom:0}
+
+  /* executive summary */
+  .exec{margin-top:20px;border-left:3px solid var(--accent);background:var(--accent-soft);
+     padding:16px 20px;border-radius:0 8px 8px 0;break-inside:avoid}
+  .exec .lbl{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+  .exec p{font-size:14.5px;line-height:1.6;margin:0;color:#23384a}
+  .exec .valid{margin-top:10px;font-size:12px;color:var(--muted)}
+
+  /* callout (deadline / budget) */
+  .deadline,.budget{margin-top:16px;border:1.5px solid var(--ink);border-radius:10px;padding:14px 18px;break-inside:avoid}
+  .deadline .lbl,.budget .lbl{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+  .deadline .lbl::before,.budget .lbl::before{content:"";width:8px;height:8px;background:var(--accent);border-radius:50%}
+  .deadline p,.budget p{font-size:13.5px;line-height:1.55;margin:0 0 8px;color:#23384a}
+  .deadline ol,.budget ol{margin:0 0 8px;padding-left:20px}
+  .deadline ol li,.budget ol li{font-size:13.5px;line-height:1.5;padding:3px 0;color:#23384a}
+  .deadline .rec,.budget .rec{font-size:13px;color:var(--ink);font-weight:500;border-top:1px solid var(--hair);padding-top:8px}
+
+  ul.list{margin:0;padding:0;list-style:none}
+  ul.list li{font-size:14px;line-height:1.5;padding:8px 0 8px 26px;border-bottom:1px solid var(--hair);position:relative;break-inside:avoid}
+  ul.list li:last-child{border-bottom:0}
+  ul.list li::before{content:"";position:absolute;left:4px;top:14px;width:7px;height:7px;
+     background:var(--accent);border-radius:1px;transform:rotate(45deg)}
+  ul.list.excl li::before{background:none;border:1.5px solid #c2ccd4;border-radius:50%;transform:none;width:8px;height:8px;top:13px}
+  ul.list.check li::before{background:none;border:0;content:"\2713";color:var(--accent);font-size:12px;font-weight:700;top:8px;left:3px;width:auto;height:auto;transform:none}
+  .lead{font-size:13px;color:var(--muted);margin:0 0 8px}
+
+  /* milestones */
+  .miles{margin:0;padding:0;list-style:none}
+  .miles li{display:flex;gap:14px;padding:9px 0;border-bottom:1px solid var(--hair);font-size:14px;line-height:1.5;break-inside:avoid}
+  .miles li:last-child{border-bottom:0}
+  .miles .ml{font-family:var(--mono);font-size:11px;letter-spacing:.04em;color:var(--accent);flex:0 0 92px;width:92px;padding-top:1px;position:relative}
+  .caveat{font-size:12px;color:var(--muted);margin-top:10px;font-style:italic}
+
+  /* investment */
+  .invest{margin-top:24px;border:1.5px solid var(--ink);border-radius:12px;overflow:hidden;break-inside:avoid}
+  .invest .bridge{padding:14px 22px 0;font-size:13.5px;color:var(--muted)}
+  .invest .top{display:flex;align-items:baseline;justify-content:space-between;gap:16px;
+     padding:18px 22px;background:var(--ink);color:#fff;margin-top:14px}
+  .invest .label{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;opacity:.8}
+  .invest .frame{font-size:12px;opacity:.75;margin-top:4px}
+  .invest .price{font-family:var(--mono);font-weight:700;font-size:34px;letter-spacing:-.01em;line-height:1}
+  .pill{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.08em;
+     background:var(--accent);color:var(--on-accent);padding:5px 10px;border-radius:20px;white-space:nowrap}
+  .invest .why{padding:14px 22px;font-size:13.5px;line-height:1.55;color:#23384a}
+  .invest .lines{padding:0 22px;margin:0;list-style:none}
+  .invest .lines li{display:flex;justify-content:space-between;gap:16px;font-size:13px;
+     padding:7px 0;border-top:1px solid var(--hair);color:#34485a}
+  .invest .lines li .v{font-family:var(--mono);white-space:nowrap}
+  .invest .runcost{padding:13px 22px 16px;font-size:12.5px;color:var(--muted)}
+  .invest .runcost b{color:var(--ink)}
+
+  /* terms at a glance */
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px 26px;margin-top:4px}
+  .term{font-size:13.5px;padding:9px 0;border-bottom:1px solid var(--hair);break-inside:avoid}
+  .term .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:3px}
+
+  /* acceptance / signatures */
+  .sign{display:grid;grid-template-columns:1fr 1fr;gap:30px 40px;margin-top:18px}
+  .sigbox{break-inside:avoid}
+  .sigbox .who{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:26px}
+  .sigline{border-top:1px solid var(--ink);padding-top:6px;font-size:11.5px;color:var(--muted)}
+  .sigline + .sigline{margin-top:20px}
+
+  /* agreement */
+  .clause{margin-top:16px;break-inside:avoid}
+  .clause h3{font-size:14px;margin:0 0 4px;display:flex;gap:8px;align-items:baseline}
+  .clause h3 .c{font-family:var(--mono);color:var(--accent);font-size:13px}
+  .clause p{font-size:13px;line-height:1.6;margin:0;color:#34485a}
+
+  footer.doc{margin-top:30px;padding-top:14px;border-top:1px solid var(--hair);
+     display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:11px;font-family:var(--mono)}
+
+  @media print{
+    @page{size:Letter;margin:.6in}
+    html,body{background:#fff}
+    .bar{display:none}
+    .sheet{box-shadow:none;margin:0;max-width:none;padding:0}
+    .cover{min-height:auto;break-after:page;height:9.2in}
+    .agreement{break-before:page}
+    section.block,.exec,.invest,.sigbox,.clause,.term,.miles li,ul.list li{break-inside:avoid}
+    h2{break-after:avoid}
+  }
+  @media(max-width:640px){ .grid2,.sign{grid-template-columns:1fr} .sheet{padding:.5in .45in} .cover h1{font-size:32px} }
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <span class="tag">BRIEFLOCK · proposal preview</span>
+  <span class="spacer"></span>
+  <span class="powered">client-facing · review then Print → Save as PDF</span>
+  <button onclick="window.print()">Print / Save as PDF</button>
+</div>
+
+<div class="sheet" id="doc"></div>
+
+<script>
+/* ---- DATA: default = the committed demo (Northlight AI · from-scratch AI support agent,
+   ai-agent-single, FLAT, $20,625, MID deal). The engine/agent sets window.PROPOSAL_DATA to
+   re-render for another scenario; it merges over this object, so any omitted field falls back.
+   NO internal pricing math appears here — the client sees a clean total + value only. ---- */
+const DEFAULT_DATA = {
+  studio:"Northlight AI",
+  tagline:"AI automation that pays for itself.",
+  brand:{ color_primary:"#13293D", color_accent:"#17B2A3", font:"Space Grotesk",
+    logo_svg:'<svg class="mark" viewBox="0 0 64 64" fill="currentColor" aria-label="Northlight AI"><path d="M32 3 L36.6 27.4 L61 32 L36.6 36.6 L32 61 L27.4 36.6 L3 32 L27.4 27.4 Z"/></svg>',
+    logo:"reference/brand/northlight-mark.svg", voice:"clean, direct, professional" },
+  client_name:"Meridian Retail Co.",
+  date:"[Issue date]",
+  valid_days:30,
+  deal_size_band:"MID",
+  exec_summary:"Meridian Retail Co. is spending growing support-team hours on repeat order and product questions. Northlight AI will build a from-scratch AI support agent that resolves those questions on its own — connected to your order system and product docs, tuned to your quality bar. Delivery in about 10–12 weeks; one fixed price of $20,625; you own the finished system. The detail follows, but if it reads right you can approve on this page.",
+  situation:"Right now, your support team answers the same order-status and product questions by hand, and the volume is climbing — and with your November peak coming, it's about to spike. Every hour spent on a question a system could answer is an hour not spent on the cases that genuinely need a person — and as you grow, that gap widens, not narrows.\n\nYou don't need more headcount thrown at repetitive work; you need the repetitive work to handle itself, accurately, without dropping the quality your customers expect. Here's how we'd solve that.",
+  approach:"We work in three stages. First, Discovery: we map your order system and documentation and agree on exactly what \"a good answer\" means for your team. Then the Build: we develop the agent, wire the integrations, and tune it against real questions until it clears your accuracy bar. Finally, Handover: we walk your team through it, hand over the working system, and make sure you can run it without us. You see progress at each stage, not just at the end.",
+  deliverables:[
+    "A from-scratch AI support agent that answers customer questions",
+    "Integration with your order-management system",
+    "Integration with your product documentation / knowledge base",
+    "Accuracy tuning to your support quality bar",
+    "One handover &amp; training session"
+  ],
+  acceptance:[
+    "The agent is done when it answers a test set of real questions you approve at the accuracy bar we agree, and runs end-to-end without manual steps.",
+    "You have 14 days after handover to flag anything that doesn't match this; after that it's accepted."
+  ],
+  exclusions:[
+    "Custom UI or customer-facing dashboard",
+    "Third-party license or subscription fees",
+    "Content or copy you supply",
+    "Hosting and API usage beyond the build",
+    "Ongoing maintenance or retainer",
+    "Training beyond the one handover session"
+  ],
+  inputs_needed:[
+    "Access to your order-management system and product documentation",
+    "A set of real example questions with the answers you'd expect, so we can both measure when the agent hits your bar",
+    "One point of contact to consolidate feedback within each review round"
+  ],
+  timeline:"About 10–12 weeks from signing, assuming inputs arrive on time",
+  milestones:[
+    { label:"Weeks 1–3", detail:"Discovery, system access, and integration mapping — needs your credentials and sample data to start" },
+    { label:"Weeks 3–9", detail:"Agent build, the integrations, and accuracy tuning against your approved test set" },
+    { label:"Weeks 9–12", detail:"Your review round, handover, and training session" }
+  ],
+  deadline:{
+    note:"You've asked to be live before your November peak — about 8 weeks out. An honest build of this is 10–12 weeks, so the full scope won't safely make that date. Rather than promise a date we'd miss, here's how we'd handle it:",
+    options:[
+      "Phase it — ship order-status lookups (your highest-volume questions) by peak, with returns handling right after.",
+      "Trim scope — drop the lowest-priority integration for now to fit the date.",
+      "Compress — a focused push to hit the date, quoted separately as a rush."
+    ],
+    recommendation:"We'd recommend phasing: you get the biggest win live for peak without rushing the accuracy that matters most here."
+  },
+  budget:null,
+  why_us:"",
+  price:"$20,625",
+  pricing_label:"Fixed-price project",
+  price_frame_line:"A single fixed price for a bounded, well-defined build — you know the number up front.",
+  price_bridge:"To solve the situation above — repetitive support handled accurately on its own — the investment is:",
+  price_note:"One fixed price for a bounded, well-defined build. You know the exact number before we start, and it protects the scope for both of us — no hourly meter, no creeping invoice, no surprises at the end. The price holds as long as the scope above holds.",
+  price_lines:[],
+  payment_schedule:"50% deposit on signing, 50% on delivery. The deposit is non-refundable once work has started and books your start date.",
+  run_cost:"Model API usage and hosting are billed separately at cost — not part of the build price. We'll estimate it with you before launch.",
+  assumptions:[
+    "The scope is as described above and stable",
+    "One consolidated point of contact per review round",
+    "Content and copy are supplied by you, ready to use",
+    "Your platforms and APIs remain available and priced as today"
+  ],
+  terms:{
+    revisions:"2 revision rounds per deliverable; further rounds are billed at $125/hr and added by change order. A round is one consolidated set of feedback, not a trickle of one-off changes.",
+    deposit:"The deposit is non-refundable. Work does not commence until the deposit is received in cleared funds, and all timelines run from that date.",
+    acceptance:"The Client has fourteen (14) days after delivery of each deliverable to identify, in writing, anything that does not conform to the Proposal. After that window passes without written notice, the deliverable is accepted and any final payment tied to it becomes due.",
+    change_order:"Any service not listed in the Proposal is out of scope. New or expanded scope is documented in a written change order describing the change, the additional fee, and any revised timeline, and is agreed in writing by both parties before that work begins. Once signed, a change order becomes a binding part of this Agreement; no verbal scope changes are recognized.",
+    ip:"On final payment in full, all ownership of the final work product created for the Client under this Agreement transfers to the Client. Until payment is complete, the Contractor retains all rights in the work. The Contractor keeps ownership of its pre-existing tools, libraries, and general know-how used to build it, and may display the finished work in its portfolio and marketing.",
+    confidentiality:"Each party will keep the other's non-public information confidential and use it only to perform this engagement. This does not cover information that is or becomes public through no fault of the receiving party, or that must be disclosed by law.",
+    late_fee:"Overdue invoices accrue 1.5% per month on the outstanding balance, or the maximum rate permitted by law, whichever is less; work pauses on any invoice more than 14 days overdue.",
+    kill_fee:"Completed milestones are billed in full, and 30% of the remaining contract balance is due as a kill fee.",
+    independent_contractor:"The Contractor performs this work as an independent contractor, not an employee, partner, joint venturer, or agent of the Client. The Contractor controls how and when the work is done, supplies its own tools, and is responsible for its own taxes, insurance, and benefits. Nothing here creates an employment or agency relationship.",
+    warranty:"The Contractor warrants that the work will be performed in a professional and workmanlike manner and will conform to the Proposal. If a delivered item does not conform, the Contractor will re-perform it at no charge, provided the Client reports it within the acceptance window. This is the Client's sole remedy for defective work. The Contractor does not warrant results from third-party platforms, models, or APIs outside its control.",
+    liability:"Neither party is liable to the other for any indirect, incidental, special, or consequential damages, or for lost profits or data, arising from this Agreement. The Contractor's total liability for any claim is capped at the total fees the Client has paid for the work giving rise to the claim.",
+    governing_law:"This Agreement is governed by the laws of the Contractor's home jurisdiction."
+  }
+};
+const D = Object.assign({}, DEFAULT_DATA, window.PROPOSAL_DATA||{});
+/* Terms carry profile-specific NUMBERS (late-fee %, kill-fee %, revision rate). For a real quote
+   those must come ONLY from the quote — a subfield the agent omits must NOT inherit the demo's
+   numbers into a binding contract. So a real quote merges over a number-free NEUTRAL base; the
+   committed demo (no PROPOSAL_DATA) keeps its full sample terms. */
+const NEUTRAL_TERMS = Object.assign({}, DEFAULT_DATA.terms, {
+  revisions:"Revision rounds, and the rate for any rounds beyond them, are as agreed in writing and added by change order. A round is one consolidated set of feedback, not a trickle of one-off changes.",
+  late_fee:"Overdue invoices are subject to the late-payment terms agreed in writing; work pauses on any invoice that remains overdue.",
+  kill_fee:"If either party ends the engagement early, the Client pays for all work completed to that date; any additional kill fee is as agreed in writing.",
+  acceptance:"After delivery of each deliverable, the Client should promptly review it and give written notice of anything that does not conform to the Proposal. A deliverable not disputed in writing within a reasonable acceptance period after delivery is deemed accepted, and any final payment tied to it becomes due."
+});
+D.terms = Object.assign({}, (window.PROPOSAL_DATA ? NEUTRAL_TERMS : DEFAULT_DATA.terms), (window.PROPOSAL_DATA||{}).terms||{});
+/* Brand is identity, not a generic default: the demo's Northlight brand must NOT bleed into a
+   real quote. So when a real PROPOSAL_DATA is present, brand comes ONLY from it (absent → neutral
+   default theme + wordmark). The committed demo (no override) keeps the Northlight brand. */
+D.brand = window.PROPOSAL_DATA ? (window.PROPOSAL_DATA.brand || {}) : DEFAULT_DATA.brand;
+
+/* Demo CONTENT must never bleed into a real quote — same principle as brand above. When a real
+   PROPOSAL_DATA is present, every client-specific field it did NOT set falls back to empty/omitted,
+   NOT the demo's sample text (so the demo's deadline callout, run-cost line, exec summary, etc.
+   never leak in). Structural fields (valid_days, pricing_label, deal_size_band, brand, terms) keep
+   their defaults. The committed demo has no PROPOSAL_DATA, so it still renders its full sample. */
+if (window.PROPOSAL_DATA) {
+  const KEEP = { valid_days:1, pricing_label:1, deal_size_band:1, brand:1, terms:1 };
+  const EMPTY_ARRAY = { deliverables:1, acceptance:1, exclusions:1, inputs_needed:1, milestones:1, assumptions:1, price_lines:1 };
+  const NULLABLE = { deadline:1, budget:1 };
+  for (const k in DEFAULT_DATA) {
+    if (KEEP[k] || (k in window.PROPOSAL_DATA)) continue;
+    D[k] = EMPTY_ARRAY[k] ? [] : (NULLABLE[k] ? null : '');
+  }
+  /* The loop above catches OMITTED fields. This catches the agent COPYING demo boilerplate verbatim:
+     run_cost is job-type-specific (an AI build has a model/hosting bill; a prompt job has none). If a real
+     quote's run_cost is byte-identical to the demo's, it was copied — not set from the engine's run_costs[] —
+     so drop it; it must not contradict a "no run cost" job. A genuine job-authored run_cost differs and renders. */
+  if (D.run_cost && D.run_cost === DEFAULT_DATA.run_cost) D.run_cost = '';
+}
+
+/* ---- Theme from the brand block; anything missing keeps the default theme. ---- */
+const B = D.brand || {};
+const rs = document.documentElement.style;
+const accentHex = B.color_accent || '#2563eb';
+if(B.color_primary) rs.setProperty('--ink', B.color_primary);
+rs.setProperty('--accent', accentHex);
+if(B.font) rs.setProperty('--display', `'${B.font}', system-ui, sans-serif`);
+
+/* pick text that stays readable ON the accent (white on dark/mid accents, near-black on light ones) */
+function onColor(hex){
+  const h=(hex||'').replace('#','');
+  if(h.length<6) return '#ffffff';
+  const r=parseInt(h.slice(0,2),16), g=parseInt(h.slice(2,4),16), b=parseInt(h.slice(4,6),16);
+  const L=(0.299*r+0.587*g+0.114*b)/255;
+  return L>0.62 ? '#10151b' : '#ffffff';
+}
+rs.setProperty('--on-accent', onColor(accentHex));
+
+/* logo precedence: inline SVG (self-contained) → image path (strip leading reference/) → text wordmark */
+const logoSrc = B.logo ? B.logo.replace(/^reference\//,'') : '';
+const MARK = B.logo_svg ? B.logo_svg
+          : logoSrc   ? `<img class="mark" src="${logoSrc}" alt="">`
+          : '';
+
+const SMALL = D.deal_size_band === 'SMALL';
+
+/* helpers */
+const li    = a => (a||[]).map(x=>`<li>${x}</li>`).join("");
+const miles = a => (a||[]).map(m=>`<li><span class="ml">${m.label}</span><span>${m.detail}</span></li>`).join("");
+const plines= a => (a||[]).map(p=>`<li><span>${p.label}</span><span class="v">${p.value}</span></li>`).join("");
+/* deadline options tolerate a plain string OR a {label, detail} object — never render [object Object] */
+const opt   = a => (a||[]).map(x=> (x && typeof x === 'object') ? `<li><b>${x.label||''}</b>${x.detail ? ' — '+x.detail : ''}</li>` : `<li>${x}</li>`).join("");
+const paras = x => (Array.isArray(x) ? x : String(x||"").split(/\n\n+/))
+                    .filter(s=>s.trim()).map(s=>`<p class="body">${s.trim()}</p>`).join("");
+const runhead = label => SMALL ? "" :
+  `<div class="runhead"><span>${D.studio}</span><span class="r">${label}</span></div>`;
+
+/* conditional section builders */
+const execBlock = (D.exec_summary && !SMALL)
+  ? `<div class="exec"><div class="lbl">Executive summary</div><p>${D.exec_summary}</p>
+       <div class="valid">This proposal is valid for ${D.valid_days} days from the issue date.</div></div>` : '';
+
+const milestonesBlock = (D.milestones && D.milestones.length)
+  ? `<section class="block"><h2>Timeline &amp; milestones</h2>
+       <div class="lead">${D.timeline}</div>
+       <ul class="miles">${miles(D.milestones)}</ul>
+       <div class="caveat">Client-side delays (access, feedback, approvals) shift the schedule one-for-one.</div></section>`
+  : `<section class="block"><h2>Timeline</h2><p class="body">${D.timeline}</p></section>`;
+
+const deadlineBlock = (D.deadline && D.deadline.note)
+  ? `<div class="deadline"><div class="lbl">Timing note</div>
+       <p>${D.deadline.note}</p>
+       ${(D.deadline.options && D.deadline.options.length) ? `<ol>${opt(D.deadline.options)}</ol>` : ''}
+       ${D.deadline.recommendation ? `<div class="rec">${D.deadline.recommendation}</div>` : ''}</div>`
+  : '';
+
+const budgetBlock = (D.budget && D.budget.note)
+  ? `<div class="budget"><div class="lbl">On your budget</div>
+       <p>${D.budget.note}</p>
+       ${(D.budget.options && D.budget.options.length) ? `<ol>${opt(D.budget.options)}</ol>` : ''}
+       ${D.budget.recommendation ? `<div class="rec">${D.budget.recommendation}</div>` : ''}</div>`
+  : '';
+
+const inputsBlock = (D.inputs_needed && D.inputs_needed.length)
+  ? `<section class="block"><h2>What we need from you</h2>
+       <div class="lead">The timeline below assumes these reach us within about 5 business days of signing.</div>
+       <ul class="list">${li(D.inputs_needed)}</ul></section>` : '';
+
+const whyUsBlock = (D.why_us && D.why_us.trim())
+  ? `<section class="block"><h2>Why us</h2><p class="body">${D.why_us}</p></section>` : '';
+
+const lineItemsBlock = (D.price_lines && D.price_lines.length)
+  ? `<ul class="lines">${plines(D.price_lines)}</ul>` : '';
+
+const runCostBlock = (D.run_cost && D.run_cost.trim())
+  ? `<div class="runcost"><b>Monthly running cost (billed separately):</b> ${D.run_cost}</div>` : '';
+
+const assumptionsBlock = (D.assumptions && D.assumptions.length)
+  ? `<section class="block"><h2>Assumptions</h2><ul class="list">${li(D.assumptions)}</ul></section>` : '';
+
+/* terms at a glance — derived from the SAME terms{} + live fields (one source, two views) */
+const glance = (D.terms_glance && D.terms_glance.length) ? D.terms_glance : [
+  { k:"Payment",   v:D.payment_schedule.split('.')[0] + '.' },
+  { k:"Timeline",  v:D.timeline },
+  { k:"Revisions", v:(D.terms.revisions||'').split('.')[0] + '.' },
+  { k:"Ownership", v:"Transfers to you on payment in full." },
+  { k:"Changes",   v:"New scope is quoted and agreed in writing first." },
+  { k:"Validity",  v:`Valid for ${D.valid_days} days from issue.` }
+];
+const glanceBlock = `<div class="grid2">${glance.map(t=>`<div class="term"><span class="k">${t.k}</span>${t.v}</div>`).join("")}</div>`;
+
+document.getElementById("doc").innerHTML = `
+  <!-- ===== COVER (own page in print) ===== -->
+  <section class="cover">
+    <div class="top">
+      ${MARK}
+      <div class="brandblock">
+        <div class="name">${D.studio}</div>
+        <div class="tagline">${D.tagline}</div>
+      </div>
+    </div>
+    <div class="cover-title">
+      <div class="eyebrow">Prepared for</div>
+      <h1>${D.client_name}</h1>
+      <div class="for">Proposal &amp; Service Agreement</div>
+      <div class="meta">Issued ${D.date} &nbsp;·&nbsp; Valid ${D.valid_days} days &nbsp;·&nbsp; Prepared by ${D.studio}</div>
+    </div>
+    <div class="toc">
+      <b>In this document</b>
+      The situation · Our approach · What you'll get · The finished result · What's not included · What we need from you · Timeline · Investment · Payment · Terms at a glance · Service Agreement (15 clauses)
+    </div>
+  </section>
+
+  <!-- ===== PROPOSAL ===== -->
+  ${runhead('Proposal')}
+  ${execBlock}
+
+  <section class="block">
+    <h2>The situation</h2>
+    ${paras(D.situation)}
+  </section>
+
+  <section class="block">
+    <h2>Our approach</h2>
+    ${paras(D.approach)}
+  </section>
+
+  <section class="block">
+    <h2>What you'll get</h2>
+    <ul class="list">${li(D.deliverables)}</ul>
+  </section>
+
+  <section class="block">
+    <h2>The finished result</h2>
+    <div class="lead">How we'll both know each piece is done:</div>
+    <ul class="list check">${li(D.acceptance)}</ul>
+  </section>
+
+  <section class="block">
+    <h2>What's not included</h2>
+    <div class="lead">To keep this clean and the price honest, the following sit outside this scope — each is easy to add as a separate line if you want it.</div>
+    <ul class="list excl">${li(D.exclusions)}</ul>
+  </section>
+
+  ${inputsBlock}
+  ${milestonesBlock}
+  ${deadlineBlock}
+  ${whyUsBlock}
+
+  <div class="invest">
+    <div class="bridge">${D.price_bridge||''}</div>
+    <div class="top">
+      <div><div class="label">Investment</div><div class="frame">${D.price_frame_line||''}</div></div>
+      <div style="display:flex;align-items:center;gap:14px">
+        <span class="price">${D.price}</span><span class="pill">${D.pricing_label}</span>
+      </div>
+    </div>
+    <div class="why">${D.price_note}</div>
+    ${lineItemsBlock}
+    ${runCostBlock}
+  </div>
+
+  ${budgetBlock}
+
+  <section class="block">
+    <h2>Payment schedule</h2>
+    <p class="body">${D.payment_schedule}</p>
+  </section>
+
+  <section class="block">
+    <h2>Terms at a glance</h2>
+    ${glanceBlock}
+  </section>
+
+  ${assumptionsBlock}
+
+  <section class="block">
+    <h2>Next steps</h2>
+    <p class="body">If this is the right fit — and we think it is — sign below and send one copy back. We'll issue the deposit invoice and lock in your start date. Signing accepts this proposal and the service agreement that follows.</p>
+    <div class="sign">
+      <div class="sigbox">
+        <div class="who">${D.client_name}</div>
+        <div class="sigline">Signature</div>
+        <div class="sigline">Name</div>
+        <div class="sigline">Date</div>
+      </div>
+      <div class="sigbox">
+        <div class="who">${D.studio}</div>
+        <div class="sigline">Signature</div>
+        <div class="sigline">Name</div>
+        <div class="sigline">Date</div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="doc"><span>${D.studio}</span><span>Proposal · ${D.date}</span></footer>
+
+  <!-- ===== SERVICE AGREEMENT (new page in print) ===== -->
+  <div class="agreement">
+    ${runhead('Service Agreement')}
+    <header class="doc" style="margin-top:8px">
+      ${MARK}
+      <div class="brandblock"><div class="name">${D.studio}</div><div class="tagline">Service Agreement</div></div>
+      <div class="header-right"><div class="eyebrow">Agreement</div><div class="meta">Issued ${D.date}<br>${D.studio} &amp; ${D.client_name}</div></div>
+    </header>
+
+    <h1 class="title">Service Agreement</h1>
+    <div class="prepared">Between ${D.studio} ("Contractor") and ${D.client_name} ("Client"), covering the work described in the proposal above.</div>
+
+    <div class="clause"><h3><span class="c">1.</span> Parties</h3>
+      <p>This Service Agreement ("Agreement") is entered into as of the date of last signature below, between ${D.studio} ("Contractor") and ${D.client_name} ("Client"). It governs the work described in the proposal above (the "Proposal"), which is incorporated into and forms part of this Agreement.</p></div>
+
+    <div class="clause"><h3><span class="c">2.</span> Scope &amp; deliverables</h3>
+      <p>The work is exactly the items listed in the Proposal under "What you'll get." Each deliverable is complete when it meets the description there and the conditions under "The finished result." Any service discussed, implied, or assumed but not explicitly listed is out of scope and is handled only through a change order (Clause 6).</p></div>
+
+    <div class="clause"><h3><span class="c">3.</span> Fees &amp; payment</h3>
+      <p>The total fee for the work is ${D.price}, payable as follows: ${D.payment_schedule} ${D.terms.late_fee}</p></div>
+
+    <div class="clause"><h3><span class="c">4.</span> Deposit</h3>
+      <p>${D.terms.deposit}</p></div>
+
+    <div class="clause"><h3><span class="c">5.</span> Acceptance</h3>
+      <p>${D.terms.acceptance}</p></div>
+
+    <div class="clause"><h3><span class="c">6.</span> Change orders &amp; out-of-scope</h3>
+      <p>${D.terms.change_order}</p></div>
+
+    <div class="clause"><h3><span class="c">7.</span> Intellectual property</h3>
+      <p>${D.terms.ip}</p></div>
+
+    <div class="clause"><h3><span class="c">8.</span> Confidentiality</h3>
+      <p>${D.terms.confidentiality}</p></div>
+
+    <div class="clause"><h3><span class="c">9.</span> Term, termination &amp; kill fee</h3>
+      <p>Either party may terminate this Agreement with written notice. On termination, the Client pays for all work completed to that date, and the deposit remains non-refundable. ${D.terms.kill_fee}</p></div>
+
+    <div class="clause"><h3><span class="c">10.</span> Revisions</h3>
+      <p>${D.terms.revisions}</p></div>
+
+    <div class="clause"><h3><span class="c">11.</span> Independent contractor</h3>
+      <p>${D.terms.independent_contractor}</p></div>
+
+    <div class="clause"><h3><span class="c">12.</span> Limited warranty</h3>
+      <p>${D.terms.warranty}</p></div>
+
+    <div class="clause"><h3><span class="c">13.</span> Limitation of liability</h3>
+      <p>${D.terms.liability}</p></div>
+
+    <div class="clause"><h3><span class="c">14.</span> Governing law &amp; entire agreement</h3>
+      <p>${D.terms.governing_law} This Agreement, together with the Proposal, is the entire agreement between the parties and replaces any prior discussions, proposals, or understandings. Any change must be in writing and signed by both parties. If any provision is unenforceable, the rest remains in effect.</p></div>
+
+    <div class="clause"><h3><span class="c">15.</span> Signatures</h3>
+      <p>By signing below, each party agrees to the Proposal and this Service Agreement.</p>
+      <div class="sign">
+        <div class="sigbox">
+          <div class="who">${D.client_name}</div>
+          <div class="sigline">Signature</div>
+          <div class="sigline">Name</div>
+          <div class="sigline">Date</div>
+        </div>
+        <div class="sigbox">
+          <div class="who">${D.studio}</div>
+          <div class="sigline">Signature</div>
+          <div class="sigline">Name</div>
+          <div class="sigline">Date</div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="doc"><span>${D.studio}</span><span>Agreement · ${D.date}</span></footer>
+  </div>
+`;
+</script>
+</body>
+</html>

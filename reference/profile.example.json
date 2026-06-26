@@ -1,0 +1,44 @@
+{
+  "studio_name": "Northlight AI",
+  "brand": {
+    "tagline": "AI automation that pays for itself.",
+    "voice": "clean, direct, professional",
+    "logo": "reference/brand/northlight-mark.svg",
+    "color_primary": "#13293D",
+    "color_accent": "#17B2A3",
+    "font": "Space Grotesk"
+  },
+  "rate": 125,
+  "floor": 1500,
+  "overhead_pct": 0.10,
+  "value_threshold": 50000,
+  "value_share": 0.15,
+  "service_menu": [
+    "workflow-simple",
+    "workflow-multi",
+    "workflow-complex",
+    "chatbot-faq",
+    "chatbot-llm",
+    "rag-pipeline",
+    "rag-multisource",
+    "ai-agent-single",
+    "ai-agent-multistep",
+    "prompt-optimization",
+    "prompt-strategy",
+    "folder-agent",
+    "ai-audit",
+    "ai-roadmap",
+    "api-integration",
+    "landing-page",
+    "dashboard-internal"
+  ],
+  "terms": {
+    "payment_schedule": "50% on signing, 50% on delivery",
+    "revision_cap": 2,
+    "revision_overage_rate": 125,
+    "kill_fee_pct": 0.30,
+    "late_fee": "1.5% per month on overdue invoices",
+    "change_order": "New scope = a new quote, agreed in writing before work starts"
+  },
+  "past_jobs": []
+}

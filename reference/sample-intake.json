@@ -1,0 +1,22 @@
+{
+  "_comment": "What the model produces from this raw request: 'We need an AI agent that pulls from our internal order system and our docs to answer customer questions accurately. Build it from scratch. Scope is the agent only, no custom UI. Fixed deliverable.'",
+  "line_items": [
+    {
+      "service_key": "ai-agent-single",
+      "signals": {
+        "integration_count": 2,
+        "accuracy_critical": true,
+        "custom_ui": false,
+        "data_access": true,
+        "net_new_build": true
+      }
+    }
+  ],
+  "engagement": {
+    "scope_bounded": true,
+    "client_paced": false,
+    "ongoing": false,
+    "roi_measurable": false,
+    "roi_amount_usd": null
+  }
+}
