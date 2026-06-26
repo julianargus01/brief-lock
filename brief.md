@@ -1,11 +1,13 @@
-# brief.md
+# BriefLock
 
-I'm an AI consultant and automation builder. For about three years I've built AI agents, automations, chatbots, n8n workflows, and RAG systems for small businesses and founders.
+I'll be honest: I'm new to AI consulting and automation. In my old life as a filmmaker, I had an agent to handle my contracts — I just did the creative work. Here, I have no such cover. And I see it in our community: even seasoned pros grapple with vague requests, scope creep, undefined expectations. Scope creep alone can quietly eat thousands on a single job.
 
-Every job starts as a vague request. "I need a chatbot for my site." "Can you automate my lead flow." "Build an agent that reads my docs." Before I can say yes, I have to turn that fog into a number, and AI work is the hardest thing I price.
+So I built BriefLock — a folder-based pricing operator. You point it at your business, paste in a messy client request, and it scopes the work, recommends how to charge — flat, hourly, retainer, or value-based — and prices it.
 
-I underquote, by 30 to 50 percent. I forget the monthly API and hosting costs. I quote a flat fee on a scope that isn't locked, then eat the overruns when "one quick change" becomes ten. That cost me over $2,000 on a single project last quarter. I pick the wrong model: flat when the work is open-ended, hourly when an automation that saves a client $50k a year should be value-priced. And I don't know what the market really pays, so I anchor low out of fear.
+Here's the part I care about: it doesn't *guess* that price. The model sorts the request into signals; the code computes the number from real data — same request in, same price out, with a receipt that shows every decision. And when an ask is too vague to price honestly, it doesn't invent a number — it hands you the exact follow-up questions to ask.
 
-Each quote burns two to three hours of second-guessing, and I still get them wrong.
+On first use, BriefLock learns your business — your brand, rates, services, and terms. After that, give it your client notes and watch: a fully scoped, priced, locked proposal, ready to send in minutes.
 
-I want to paste a messy client request into a tool and get back a scoped quote: the effort estimated against real market data, a recommended pricing model, a price computed the same way every time, and a contract that locks scope against creep. When the request is too vague to price, I want the exact questions to ask, not a guessed number.
+And when the inevitable change requests roll in, hand them over too. BriefLock weighs each against the locked scope, prices the change, and drafts your reply. BriefLock holds the line.
+
+No more guessing. No more gaps. A locked job, clearly defined.
