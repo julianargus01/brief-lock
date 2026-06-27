@@ -59,6 +59,10 @@ So BriefLock is that folder:
 
 **Where the methodology meets code (the small part).** A price must be the *same* every time, so the one spot a number is decided is a tiny Python tool (`reference/price_calc.py`) — and even its logic is written in plain English (`pricing-formula.md`, `pricing-model-rules.md`, sourced bands in `service-compendium.md`) so the judgment still lives in the folder, auditable. The model labels the request; the code computes the number. The engine is just one tool in the reference layer. **The moat is the encoded judgment in the workspace — the signal taxonomy, the scoring, the trap rules — not the script.**
 
+## What's under the hood
+
+BriefLock is a folder of plain-markdown — identity, routing, rules, worked examples — wrapped around one small Python engine (`price_calc.py`) that turns the model's labels into a deterministic price: same request in, same number out. A sourced compendium carries hours, price, run-cost, and delivery-timeline bands for 22 service types from cited 2025–2026 market guides — and you retarget the whole tool to any niche by editing one file.
+
 ## Files
 
 ```
